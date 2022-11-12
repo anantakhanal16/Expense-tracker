@@ -1,0 +1,15 @@
+--exectute this first
+Create Database ExpenseTracker;
+
+USE ExpenseTracker
+
+Create table T_USER
+(
+USER_ID int IDENTITY(1,1) PRIMARY KEY,
+USERNAME NVARCHAR(20),
+EMAIL NVARCHAR(50),
+AUTHORITY_TYPE int,
+COMPANY_ID int,
+MAIL_ADDRESS NVARCHAR(50)
+,PASSWORD NVARCHAR(10)
+);
