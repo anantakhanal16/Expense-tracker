@@ -12,10 +12,10 @@ namespace Expense_tracker.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            if (Session[LoginSession] == null)
-            {
-                return RedirectToAction("Index", "Login");
-            }
+            //if (Session[LoginSession] == null)
+            //{
+            //    return RedirectToAction("Index", "Login");
+            //}
             return View();
         }
     }

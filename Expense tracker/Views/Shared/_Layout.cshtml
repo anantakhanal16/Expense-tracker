@@ -1,64 +1,87 @@
-﻿
-<!doctype html>
-<html lang="en">
+﻿@using Expense_tracker.Models
+
+<!DOCTYPE html>
+<html>
 <head>
-    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>@ViewBag.Title -  Expense Tracker</title>
+    @*@Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")*@
+    <!-- ===============================================-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
+    <link href="~/Content/vendors/overlayscrollbars/OverlayScrollbars.min.css" rel="stylesheet">
+    <link href="~/Content/" rel="stylesheet" id="style-rtl">
+    <link href="~/Content/css/theme-rtl.min.css" rel="stylesheet" id="style-rtl">
+    <link href="~/Content/css/theme.min.css" rel="stylesheet" id="style-default">
+    <link href="~/Content/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
+    <link href="~/Content/css/user.min.css" rel="stylesheet" />
+    <link href="~/Content/cssassets/css/user.min.css" rel="stylesheet" id="user-style-default">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-light  bg-light py-4">
         <a class="navbar-brand" href="#">Expense Tracker</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
+
+            <ul class="nav navbar-nav">
+
+                <li class="nav-item active mx-2">
+                    <a class="nav-link" href="/Home/Index">Home <span class="sr-only">(current)</span></a>
                 </li>
+
+                <li class="nav-item active mx-2">
+                    
+                </li>
+                <li class="nav-item active mx-2">
+                   
+                </li>
+             
+
+
+                @*<li class="nav-item active"><a class="nav-link">@Html.ActionLink("Supplier", "SupplierList", "SupplierandExpense")<span class="sr-only">(current)</span></a></li>
+                    <li class="nav-item active nav-link ">@Html.ActionLink("Salary", "Index", "EmployeeSalary")</li>
+                    <li class="nav-item active">@Html.ActionLink("Employee", "Index", "Employee")</li>*@
+            </ul>
+            <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-link text-danger" href="/Login/Logout">Logout</a>
+
+                        <a class="nav-link" href="/Employee/Index">Employee</a>
+                        if (User.IsInRole("Admin"))
+                        {
+                        <a class="nav-link" href="/SupplierandExpense/SupplierList">ShopExpense <span class="sr-only">(current)</span></a>
+                        }
+                    }
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+
         </div>
     </nav>
 
     @RenderBody()
 
-    <footer>
-        <p>&copy; @DateTime.Now.Year - Expense tracker</p>
-    </footer>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/Content/vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="~/Content/vendors/anchorjs/anchor.min.js"></script>
+    <script src="~/Content/vendors/is/is.min.js"></script>
+    <script src="~/Content/vendors/echarts/echarts.min.js"></script>
+    <script src="~/Content/vendors/fontawesome/all.min.js"></script>
+    <script src="~/Content/vendors/lodash/lodash.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="~/Content/vendors/list.js/list.min.js"></script>
+    <script src="~/Content/assets/js/theme.js"></script>
+
 </body>
 </html>

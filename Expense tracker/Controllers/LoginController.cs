@@ -8,10 +8,12 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Expense_tracker.Models;
+using System.Web.Security;
 using static Expense_tracker.CommonFiles.CommonCodes;
 using static Expense_tracker.CommonFiles.DatabaseUtilClass;
 namespace Expense_tracker.Controllers
 {
+    [AllowAnonymous]
     public class LoginController : Controller
     {
         // GET: Login
@@ -32,6 +34,7 @@ namespace Expense_tracker.Controllers
 
            if(AuthProcess(model))
            {
+                FormsAuthentication.SetAuthCookie(model.UserLogAuth.UserName, false);
                 ViewBag.Message = "Welcome To Page";
                 return RedirectToAction("Index","Home");
            }
@@ -41,6 +44,11 @@ namespace Expense_tracker.Controllers
                 return RedirectToAction("Index");
            }
             
+        }
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index");
         }
         private bool AuthProcess(Auth model)
         {

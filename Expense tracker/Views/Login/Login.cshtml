@@ -1,6 +1,8 @@
 ﻿
 @{
     ViewBag.Title = "login";
+    Layout = "~/Views/Shared/Layout_Login.cshtml";
+
 }
 
 <div class="container">
@@ -22,6 +24,7 @@
                         <label class="form-check-label" for="exampleCheck1">Check me out</label>
                     </div>
                     <button type="submit" class="btn btn-primary mx-4 ">Submit</button>
+                    @Html.AntiForgeryToken();
                 </div>
             </form>
         </div>
