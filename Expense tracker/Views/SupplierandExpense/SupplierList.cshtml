@@ -1,7 +1,40 @@
-﻿
+﻿@using Expense_tracker.Models;
+@using System.Data;
 @{
     ViewBag.Title = "SupplierList";
 }
 
-<h2>SupplierList</h2>
-
+<div class="container">
+    <h5 class="mx-2"></h5>
+    <form method="post" action="/SupplierandExpense/SupplierListAddFormComplete">
+        <div class="card bg-white my-3 py-3">
+            <div class="row d-flex justify-content-between">
+                <div class="col-md-3">
+                    <h6 class="mx-2">Vendor List Page</h6>
+                </div>
+                <div class="col-md-6 text-end mx-4">
+                    <a class="btn btn-outline-primary" href="/SupplierandExpense/SupplierListAddForm">Add vendor</a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="card bg-white my-3 py-3">
+        <table class="table table-striped">
+            <tr>
+                <th class="bold">SUPPLIER_KEY_ID</th>
+                <th>Address</th>
+                <th>Mail</th>
+                <th>Phone</th>
+            </tr>
+            @foreach (DataRow row in Model.WorkDataset.TempDataSet.Tables[0].Rows)
+            { <tr>
+                <td>@row["SUPPLIER_KEY_ID"].ToString()</td>           
+                <td>@row["SUPPLIER_NAME"].ToString()</td>           
+                <td>@row["CONTACT_NUMBER"].ToString()</td>           
+                <td>@row["MAIL"].ToString()</td> 
+                <td>@row["REG_USER"].ToString()</td> 
+            </tr>
+            }
+        </table>
+    </div>
+</div>

@@ -8,7 +8,7 @@ namespace Expense_tracker.Controllers
 {
     public class EmployeeSalaryController : Controller
     {
-        // GET: EmployeeSalary
+        
         public ActionResult Index()
         {
             return View("~/Views/EmployeeSalary/EmpSalaryList.cshtml");

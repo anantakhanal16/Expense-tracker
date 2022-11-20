@@ -36,7 +36,7 @@ namespace Expense_tracker.Controllers
            {
                 FormsAuthentication.SetAuthCookie(model.UserLogAuth.UserName, false);
                 ViewBag.Message = "Welcome To Page";
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("SupplierList", "SupplierandExpense");
            }
            else 
            {
@@ -60,8 +60,10 @@ namespace Expense_tracker.Controllers
                 {
                     DataRow UserDetail = model.WorkDataset.User.Tables[0].Rows[0];
                     model.UserLogAuth.UserName = UserDetail["USERNAME"].ToString();
-                    model.UserLogAuth.Authoritytype = UserDetail["AUTHORITY_TYPE"].ToString();
-                    model.UserLogAuth.CompanyId = UserDetail["COMPANY_ID"].ToString();
+                    Auth.Authoritytype = UserDetail["AUTHORITY_TYPE"].ToString();
+                    Auth.CompanyId = UserDetail["COMPANY_ID"].ToString();
+                    Auth.ShopId = UserDetail["SHOP_ID"].ToString();
+                    Auth.UserId = UserDetail["USER_ID"].ToString();
                     Session[LoginSession] = model.UserLogAuth;
                     return true;
                 }
@@ -81,6 +83,7 @@ namespace Expense_tracker.Controllers
                 SqlBuilder.AppendLine("     ,AUTHORITY_TYPE");
                 SqlBuilder.AppendLine("     ,COMPANY_ID");
                 SqlBuilder.AppendLine("     ,MAIL_ADDRESS");
+                SqlBuilder.AppendLine("     ,SHOP_ID");
                 SqlBuilder.AppendLine("     FROM");
                 SqlBuilder.AppendLine("     T_USER");
                 SqlBuilder.AppendLine("     WHERE");
