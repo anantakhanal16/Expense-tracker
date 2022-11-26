@@ -23,21 +23,22 @@
         <table class="table table-striped">
             <tr>
                 <th class="bold">Item ID</th>
-                <th>Item Name</th>
-                <th>Category Name</th>
                 <th>Supplier Name</th>
-                <th>Unit Price</th>
-                <th>Case Price</th>
+                <th>Category Name</th>
+                <th>Item Name</th>
+                <th>Amount</th>
+
             </tr>
-            @*@foreach (DataRow row in Model.WorkDataset.TempDataSet.Tables[0].Rows)
+            @foreach (DataRow row in Model.WorkDataset.TempDataSet.Tables[0].Rows)
             {
                 <tr>
-                    <td>@row["CAT_ID"].ToString()</td>
-                    <td>@row["CATEGORY_NAME"].ToString()</td>
+                    <td>@row["ITEM_KEY_ID"].ToString()</td>
                     <td>@row["SUPPLIER_NAME"].ToString()</td>
-                    <td>@row["SHOP_NAME"].ToString()</td>
+                    <td>@row["CATEGORY_NAME"].ToString()</td>
+                    <td>@row["ITEM_NAME"].ToString()</td>
+                    <td>@row["AMOUNT"].ToString()</td>
                 </tr>
-            }*@
+            }
         </table>
     </div>
 </div>

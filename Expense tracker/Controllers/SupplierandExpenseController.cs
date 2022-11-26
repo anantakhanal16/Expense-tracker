@@ -81,7 +81,7 @@ namespace Expense_tracker.Controllers
         {
             Supplier model = new Supplier();
             ItemList(model);
-            return View();
+            return View(model);
         }
         public ActionResult ItemListAddForm()
         {
@@ -413,9 +413,11 @@ namespace Expense_tracker.Controllers
         {
             StringBuilder sb = new StringBuilder();
             SqlConnection con = new SqlConnection(cs);
-            try { 
-            sb.Append("SELECT ");
-            sb.Append("    T_SUPPLIER.SUPPLIER_NAME ");
+            try
+            { 
+            sb.Append("SELECT");
+            sb.Append("     ITEM_SUPPLIER.ITEM_KEY_ID");
+            sb.Append("    ,T_SUPPLIER.SUPPLIER_NAME ");
             sb.Append("    , T_SUPPLIER_CATEGORY.CATEGORY_NAME ");
             sb.Append("    , SUPPLIER_ITEM_DETAILS.ITEM_NAME ");
             sb.Append("    , REFRENCES.NAME ");
@@ -436,22 +438,28 @@ namespace Expense_tracker.Controllers
             sb.Append("        AND REFRENCES.COMPANY_ID = SUPPLIER_ITEM_DETAILS.COMPANY_ID ");
             sb.Append("WHERE ");
             sb.Append("    SUPPLIER_ITEM_DETAILS.COMPANY_ID = @COMPANY_ID");
-            sb.Append("    and SUPPLIER_ITEM_DETAILS.SHOP_ID = @SHOP_ID ");
+            sb.Append("    AND SUPPLIER_ITEM_DETAILS.SHOP_ID = @SHOP_ID ");
             using (SqlCommand cmd = new SqlCommand(sb.ToString(), con))
-            {
+           {
                 cmd.Parameters.AddWithValue("@COMPANY_ID", Auth.CompanyId);
                 cmd.Parameters.AddWithValue("@SHOP_ID", Auth.ShopId);
                 con.Open();
                 var dataReader = cmd.ExecuteReader();
-                var ItemTable = new DataTable("dtitem");
+
+                DataTable ItemTable = new DataTable("DT_ITEM");
                 ItemTable.Load(dataReader);
 
                 model.WorkDataset.TempDataSet.Tables.Add(ItemTable);
-            }
+
+                }
             }
             catch (Exception ex)
             {
                 SystemException.ReferenceEquals(model, ex);
+            }
+            finally
+            {
+                con.Close();
             }
         }
     }
