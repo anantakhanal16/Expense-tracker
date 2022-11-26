@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewBag.Title = "ItemListAddForm";
+}
+
+
+
+@using Expense_tracker.Models;
+@using System.Data;
+@{
+    ViewBag.Title = "ItemListAddForm";
+}
+<div class="container">
+    <form method="post" action="/SupplierandExpense/ItemListAddFormComplete">
+        <div class="card bg-white my-3 py-3 ">
+            <div class="row">
+                <h5 class="mx-2">ItemListAddForm</h5>
+                <div class="col-md-6">
+                    <div class="form-group mx-4">
+                        <label for="suppliers">Supplier Name</label>
+                        <select name="supplierId" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                            @foreach (KeyValuePair<string, string> Suppliers in Model.ItemFormData.SuppliersLists)
+                            {
+                                <option value="@Suppliers.Key">@Suppliers.Value</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mx-4">
+                        <label for="suppliers">Category Name</label>
+                        <select name="categoryid" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                            @*@foreach (KeyValuePair<string, string> Category in Model.ItemFormData.SuppliersLists)
+                            {
+                                <option value="@Category.Key">@Category.Value</option>
+                            }*@
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mx-4">
+                        <label for="UserName">Item Name</label>
+                        <input type="text" class="form-control" name="itemname" placeholder="Enter User Name">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mx-4">
+                        <label for="suppliers">Item Price</label>
+                        <input type="text" class="form-control" name="itemprice" placeholder="Enter User Name">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mx-4">
+                        <label for="UserName">Avaliable</label>
+                        <div class="form-check"><input class="form-check-input" value="1" id="flexRadioDefault1" type="radio" name="aviableflg"/><label class="form-check-label" for="flexRadioDefault1">Yes</label></div>
+                        <div class="form-check"><input class="form-check-input"value="0" id="flexRadioDefault2" type="radio" name="aviableflg" /><label class="form-check-label" for="flexRadioDefault2">No</label></div>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mx-4">
+                        <label for="suppliers">Item Type</label>
+                        <select name="itemtype" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                            <option value="1">unit</option>
+                            <option value="2">Case</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mx-4 ">
+
+                       <label for="UserName">Remarks</label>
+                        <textarea class="form-control" name="remarks"></textarea>
+                    </div>
+                </div>
+            </div>
+
+          <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary mx-4 ">Submit</button>
+                </div>
+            </div>
+        </div>   
+    </form>
+    </div>
+

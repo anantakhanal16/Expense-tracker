@@ -11,7 +11,7 @@ namespace Expense_tracker.Models
         public static string Authoritytype { get; set; }
 
         public static string CompanyId { get; set; }
-        public static string ShopId { get; set; }
+        public static  string ShopId { get; set; }
         public static string UserId { get; set; }
 
         public UserAuth UserLogAuth  = new UserAuth();

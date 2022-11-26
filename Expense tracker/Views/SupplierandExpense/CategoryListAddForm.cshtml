@@ -1,0 +1,52 @@
+﻿@using Expense_tracker.Models;
+@using System.Data;
+@{
+    ViewBag.Title = "CategoryListAddForm";
+}
+<div class="container">
+    <form method="post" action="/SupplierandExpense/CategoryAddComplete">
+        <div class="card bg-white my-3 py-3 ">
+            <div class="row">
+                <h5 class="mx-2">Add Category   </h5>
+                <div class="col-md-6">
+                    <div class="form-group mx-4">
+                        <label for="suppliers">Supplier Name</label>
+                        <select name="supplierid" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                            @foreach (KeyValuePair<string, string> Suppliers in Model.SupDetail.SuppliersLists)
+                            {
+                                <option value="@Suppliers.Key">@Suppliers.Value</option>
+                            }
+                        </select>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="UserName">Category Name</label>
+                    <input type="text" class="form-control" name="catgory_name" placeholder="Enter User Name">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mx-4 ">
+                        <label for="UserName">Description</label>
+                        <textarea class="form-control" name="desc"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mx-4 ">
+                        <label for="UserName">Avaliable</label>
+                        <div class="form-check"><input class="form-check-input" id="flexRadioDefault1" type="radio" name="aviableflg" /><label class="form-check-label" for="flexRadioDefault1">Yes</label></div>
+                        <div class="form-check"><input class="form-check-input" id="flexRadioDefault2" type="radio" name="aviableflg" checked="" /><label class="form-check-label" for="flexRadioDefault2">No</label></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary mx-4 ">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -443,6 +443,10 @@
     <Content Include="Views\EmployeeSalary\EmpSalaryList.cshtml" />
     <Content Include="Views\Employee\Employee.cshtml" />
     <Content Include="Views\SupplierandExpense\SupplierList.cshtml" />
+    <Content Include="Views\SupplierandExpense\CategoryList.cshtml" />
+    <Content Include="Views\SupplierandExpense\CategoryListAddForm.cshtml" />
+    <Content Include="Views\SupplierandExpense\ItemsList.cshtml" />
+    <Content Include="Views\SupplierandExpense\ItemListAddForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

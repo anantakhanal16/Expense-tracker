@@ -21,19 +21,24 @@
     <div class="card bg-white my-3 py-3">
         <table class="table table-striped">
             <tr>
-                <th class="bold">SUPPLIER_KEY_ID</th>
+                <th class="bold">Supplier Id</th>
                 <th>Address</th>
                 <th>Mail</th>
                 <th>Phone</th>
             </tr>
-            @foreach (DataRow row in Model.WorkDataset.TempDataSet.Tables[0].Rows)
-            { <tr>
-                <td>@row["SUPPLIER_KEY_ID"].ToString()</td>           
-                <td>@row["SUPPLIER_NAME"].ToString()</td>           
-                <td>@row["CONTACT_NUMBER"].ToString()</td>           
-                <td>@row["MAIL"].ToString()</td> 
-                <td>@row["REG_USER"].ToString()</td> 
-            </tr>
+        
+            @if (Model.WorkDataset.TempDataSet.Tables[0] != null)
+            {
+                foreach (DataRow row in Model.WorkDataset.TempDataSet.Tables[0].Rows)
+                {
+                    <tr>
+                        <td>@row["SUPPLIER_KEY_ID"].ToString()</td>
+                        <td>@row["SUPPLIER_NAME"].ToString()</td>
+                        <td>@row["CONTACT_NUMBER"].ToString()</td>
+                        <td>@row["MAIL"].ToString()</td>
+                        <td>@row["REG_USER"].ToString()</td>
+                    </tr>
+                }
             }
         </table>
     </div>

@@ -12,7 +12,11 @@ namespace Expense_tracker.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            return View("~/Views/SupplierandExpense/SupplierList.cshtml");
+            if (Session[LoginSession] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            return View();
        
         }
     }
