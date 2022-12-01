@@ -1,15 +1,45 @@
 ﻿
-@{
-    ViewBag.Title = "ItemListAddForm";
-}
-
-
-
 @using Expense_tracker.Models;
 @using System.Data;
 @{
     ViewBag.Title = "ItemListAddForm";
 }
+
+<script>
+    function LoadData(SupplierId) {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "/SupplierandExpense/SupplierChange/",
+            data: JSON.stringify({ SupplierId }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                if (data != null) {
+                    $('#cat').remove();
+                    var categoryheader = '<div id="cat">' +
+                        '<select name="categoryid" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">';
+                    var categorybody = "";
+                    Object.entries(data.catList).forEach(([Catkey, Catvalue]) => {
+                        categorybody = categorybody + '<option value ="' + `${Catkey}` + '">' + `${Catvalue}` + '</option>'; 
+                    });
+                    var categoryall = categoryheader + categorybody +'</select>'+ '</div>';
+                    $('#catbefore').before(categoryall); 
+                } else
+                {
+                    alert("Something went wrong");
+                }
+            },
+            failure: function()  {
+                alert("error");
+            },
+            error: function () {
+                alert(error);
+            }
+        });
+    };
+</script>
 <div class="container">
     <form method="post" action="/SupplierandExpense/ItemListAddFormComplete">
         <div class="card bg-white my-3 py-3 ">
@@ -18,7 +48,8 @@
                 <div class="col-md-6">
                     <div class="form-group mx-4">
                         <label for="suppliers">Supplier Name</label>
-                        <select name="supplierId" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                        <select name="supplierId" onchange="LoadData(value)" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                            <option  value="">All supplier</option>
                             @foreach (KeyValuePair<string, string> Suppliers in Model.ItemFormData.SuppliersLists)
                             {
                                 <option value="@Suppliers.Key">@Suppliers.Value</option>
@@ -29,12 +60,17 @@
                 <div class="col-md-6">
                     <div class="form-group mx-4">
                         <label for="suppliers">Category Name</label>
-                        <select name="categoryid" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
-                            @*@foreach (KeyValuePair<string, string> Category in Model.ItemFormData.SuppliersLists)
-                            {
-                                <option value="@Category.Key">@Category.Value</option>
-                            }*@
-                        </select>
+                        <div id="cat">
+                            <select name="categoryid" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
+                                @foreach (KeyValuePair<string, string> Category in Model.ItemFormData.CategoryLists)
+                                {
+                                    <option value="@Category.Key">@Category.Value</option>
+                                }
+                            </select>
+                        </div>
+                        <div id="catbefore">
+                       
+                        </div>
                     </div>
                 </div>
             </div>

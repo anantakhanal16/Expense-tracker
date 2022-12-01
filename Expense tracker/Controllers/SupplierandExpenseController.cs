@@ -13,7 +13,7 @@ using static Expense_tracker.Models.Supplier;
 
 namespace Expense_tracker.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class SupplierandExpenseController : Controller
     {
         //[Authorize(Roles = "Admin,Customer")]
@@ -32,6 +32,7 @@ namespace Expense_tracker.Controllers
         {
             return View();
         }
+        [HttpPost]
         public ActionResult SupplierListAddFormComplete()
         {
             Supplier model = new Supplier();
@@ -65,11 +66,12 @@ namespace Expense_tracker.Controllers
 
             return View("~/Views/SupplierandExpense/CategoryListAddForm.cshtml", model);
         }
+        [HttpPost]
         public ActionResult CategoryAddComplete()
         {
             Supplier model = new Supplier();
             model.CatForm.CategoryName = RequestFormData(Request, "catgory_name");
-            model.CatForm.SupplierId = RequestFormData(Request, "supplierkey");
+            model.CatForm.SupplierId = RequestFormData(Request, "supplierid");
             model.CatForm.AvilableFlg = RequestFormData(Request, "aviableflg");
             model.CatForm.Description = RequestFormData(Request, "desc");
             InsertCategory(model);
@@ -89,11 +91,12 @@ namespace Expense_tracker.Controllers
             SelectboxData(model);
             return View(model);
         }
+        [HttpPost]
         public ActionResult ItemListAddFormComplete()
         {
             Supplier model = new Supplier();
             model.ItemFormData.SupplierID = RequestFormData(Request, "supplierid");
-            model.ItemFormData.CategoryName = RequestFormData(Request, "categoryid");
+            model.ItemFormData.CategoryID = RequestFormData(Request, "categoryid");
             model.ItemFormData.ItemName = RequestFormData(Request, "itemname");
             model.ItemFormData.ItemPrice = RequestFormData(Request, "itemprice");
             model.ItemFormData.AvaliableFlg = RequestFormData(Request, "aviableflg");
@@ -183,7 +186,7 @@ namespace Expense_tracker.Controllers
                 
                 sb.Append("INSERT ");
 				sb.Append("INTO T_SUPPLIER_CATEGORY( ");
-	        	sb.Append("     COM_ID ");
+	        	sb.Append("     COMPANY_ID ");
 				sb.Append("    , SHOP_ID ");
 				sb.Append("    , CATEGORY_NAME ");
 				sb.Append("    , REG_USER ");
@@ -228,7 +231,7 @@ namespace Expense_tracker.Controllers
             }
         }
 
-        private void CategoryList(Supplier model)
+        private void CategoryList(Supplier model, string supplierId = null)
         {
             StringBuilder sb = new StringBuilder();
             SqlConnection con = new SqlConnection(cs);
@@ -242,7 +245,7 @@ namespace Expense_tracker.Controllers
                 sb.Append("  ,T_SUPPLIER.SUPPLIER_NAME ");
                 sb.Append("  , T_SUPPLIER_CATEGORY.CATEGORY_NAME");
                 sb.Append("   FROM");
-                sb.Append("    T_SUPPLIER_CATEGORY ");
+                sb.Append("    T_SUPPLIER_CATEGORY");
                 sb.Append("    JOIN ");
                 sb.Append("    T_SUPPLIER ");
                 sb.Append("    ON ");
@@ -254,8 +257,13 @@ namespace Expense_tracker.Controllers
                 sb.Append("     ON ");
                 sb.Append("     T_SUPPLIER_CATEGORY.SHOP_ID=T_SHOP.SHOP_ID");
                 sb.Append("     WHERE");
+
                 sb.Append("    T_SUPPLIER_CATEGORY.COMPANY_ID=@COMPANY_ID");
                 sb.Append("    AND T_SUPPLIER_CATEGORY.SHOP_ID=@SHOP_ID");
+                if(!string.IsNullOrEmpty(supplierId))
+                {
+                     sb.Append("    AND T_SUPPLIER_CATEGORY.SUPPLIER_KEY_ID=@SUPPLIER_KEY_ID");
+                }
                 sb.Append("  ORDER BY");
                 sb.Append("    CAT_ID ");
 
@@ -263,6 +271,10 @@ namespace Expense_tracker.Controllers
                 {
                     cmd.Parameters.AddWithValue("@COMPANY_ID", Auth.CompanyId);
                     cmd.Parameters.AddWithValue("@SHOP_ID", Auth.ShopId);
+                    if (!string.IsNullOrEmpty(supplierId))
+                    {
+                        cmd.Parameters.AddWithValue("@SUPPLIER_KEY_ID", supplierId);
+                    }
                     con.Open();
                     var dataReader = cmd.ExecuteReader();
                     var CategoryListTable = new DataTable("CategoryList");
@@ -343,6 +355,7 @@ namespace Expense_tracker.Controllers
                 sb.Append("    , SHOP_ID ");
                 sb.Append("    , SUPPLIER_ID ");
                 sb.Append("    , ITEM_NAME ");
+                sb.Append("    , CAT_ID");
                 sb.Append("    , REG_USER ");
                 sb.Append(") ");
                 sb.Append("VALUES ( ");
@@ -350,6 +363,7 @@ namespace Expense_tracker.Controllers
                 sb.Append("    , @SHOP_ID ");
                 sb.Append("    , @SUPPLIER_ID ");
                 sb.Append("    , @ITEM_NAME ");
+                sb.Append("    , @CAT_ID");
                 sb.Append("    , @REG_USER ");
                
                 sb.Append(");SELECT SCOPE_IDENTITY(); ");
@@ -359,6 +373,7 @@ namespace Expense_tracker.Controllers
                     //cmd.Parameters.AddWithValue("@CATEGORY_NAME", model.ItemFormData.CategoryName);
                     cmd.Parameters.AddWithValue("@SUPPLIER_ID", model.ItemFormData.SupplierID);
                     cmd.Parameters.AddWithValue("@ITEM_NAME", model.ItemFormData.ItemName);
+                    cmd.Parameters.AddWithValue("@CAT_ID", model.ItemFormData.CategoryID);
 
                     cmd.Parameters.AddWithValue("@REG_USER", Auth.Authoritytype);
                     cmd.Parameters.AddWithValue("@REG_DTM", (DateTime.Now.TimeOfDay).ToString());
@@ -385,19 +400,16 @@ namespace Expense_tracker.Controllers
             try
             {
                 sb.Append("INSERT ");
-                sb.Append("INTO ITEM_SUPPLIER(ITEM_KEY_ID,COMP_KEY_ID, ITEM_PRICE_TYPE, AMOUNT) ");
+                sb.Append("INTO ITEM_SUPPLIER(ITEM_KEY_ID,COMPANY_ID, ITEM_PRICE_TYPE, AMOUNT) ");
                 sb.Append("VALUES (@ITEM_KEY_ID, @COMPANY_ID, @ITEM_PRICE_TYPE, @AMOUNT) ");
              
                 using (SqlCommand cmd = new SqlCommand(sb.ToString(), con))
                 {
-
-                    cmd.Parameters.AddWithValue("@CATEGORY_NAME", model.ItemFormData.CategoryName);
+                    cmd.Parameters.AddWithValue("@ITEM_KEY_ID", model.ItemFormData.ItemID);
+                    cmd.Parameters.AddWithValue("@COMPANY_ID", Auth.CompanyId);
                     cmd.Parameters.AddWithValue("@ITEM_PRICE_TYPE", model.ItemFormData.ItemType);
                     cmd.Parameters.AddWithValue("@AMOUNT", model.ItemFormData.ItemPrice);
-                    cmd.Parameters.AddWithValue("@COMPANY_ID", Auth.CompanyId);
-                    cmd.Parameters.AddWithValue("@ITEM_KEY_ID", model.ItemFormData.ItemID);
-
-                    con.Open();
+                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
                 }
@@ -461,6 +473,25 @@ namespace Expense_tracker.Controllers
             {
                 con.Close();
             }
+        }
+
+        [HttpPost]
+        public JsonResult SupplierChange(string supplierId)
+        {
+            Supplier model = new Supplier();  
+            CategoryList(model, supplierId);
+            foreach (DataRow suppiler in model.WorkDataset.TempDataSet.Tables[0].Rows)
+            {
+                model.ItemFormData.CategoryLists.Add(suppiler["CAT_ID"].ToString(), suppiler["CATEGORY_NAME"].ToString());
+
+            };
+            var CatList = model.ItemFormData.CategoryLists;
+            var returndata = new
+            {
+                catList = CatList
+
+            };
+            return Json(returndata, JsonRequestBehavior.AllowGet);
         }
     }
 }

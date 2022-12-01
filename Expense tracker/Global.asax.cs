@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+//using static Expense_tracker.CommonFiles.Helper;
 
 namespace Expense_tracker
 {
@@ -18,5 +19,7 @@ namespace Expense_tracker
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
+     
     }
 }

@@ -44,7 +44,7 @@ namespace Expense_tracker.Models
         {
             public int ItemID { get; set; }
             public string SupplierID { get; set; }
-            public string CategoryName { get; set; }
+            public string CategoryID { get; set; }
             public string ItemName { get; set; }
             public string ItemPrice { get; set; }
             

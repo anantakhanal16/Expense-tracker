@@ -34,9 +34,14 @@ namespace Expense_tracker.Controllers
 
            if(AuthProcess(model))
            {
+                
                 FormsAuthentication.SetAuthCookie(model.UserLogAuth.UserName, false);
-                ViewBag.Message = "Welcome To Page";
+                HttpCookie authCookie = new HttpCookie("ASP.NET_SessionId", Session.SessionID);
+                authCookie.Domain = ".mydomain.com";
+                authCookie.Expires = DateTime.Now.AddMonths(1);
+                Response.Cookies.Add(authCookie);
                 return RedirectToAction("SupplierList", "SupplierandExpense");
+                
            }
            else 
            {
@@ -113,7 +118,7 @@ namespace Expense_tracker.Controllers
             }
             finally
             {
-                //WorkDataset.Tables.Clear();
+                
                 con.Close();
             }
         }
