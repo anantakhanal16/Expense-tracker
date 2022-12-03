@@ -25,6 +25,7 @@
                 <th>Address</th>
                 <th>Mail</th>
                 <th>Phone</th>
+                <th>Action</th>
             </tr>
         
             @if (Model.WorkDataset.TempDataSet.Tables[0] != null)
@@ -37,6 +38,8 @@
                         <td>@row["CONTACT_NUMBER"].ToString()</td>
                         <td>@row["MAIL"].ToString()</td>
                         <td>@row["REG_USER"].ToString()</td>
+                        <td><a class="btn btn-outline-primary" href="/SupplierandExpense/EditSupplier/@row["SUPPLIER_KEY_ID"]">Edit</a></td>
+                        <td><a class="btn btn-outline-danger" href="/SupplierandExpense/DeleteSupplier/@row["SUPPLIER_KEY_ID"]">Delete</a></td>
                     </tr>
                 }
             }

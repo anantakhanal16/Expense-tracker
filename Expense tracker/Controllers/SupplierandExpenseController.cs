@@ -16,7 +16,7 @@ namespace Expense_tracker.Controllers
     [Authorize]
     public class SupplierandExpenseController : Controller
     {
-        //[Authorize(Roles = "Admin,Customer")]
+       //get supplierdata List 
         public ActionResult SupplierList()
         {
             if (Session[LoginSession] == null)
@@ -28,33 +28,102 @@ namespace Expense_tracker.Controllers
             return View("~/Views/SupplierandExpense/SupplierList.cshtml", model);
         }
         //[Authorize(Roles = "Admin,Customer")]
+        //add supplier Form  
         public ActionResult SupplierListAddForm()
         {
-            return View();
+            Supplier model = new Supplier();
+            return View(model);
         }
+
         [HttpPost]
         public ActionResult SupplierListAddFormComplete()
         {
             Supplier model = new Supplier();
-
+            if (Session["SupplierandExpense"] != null)
+            {
+                model.SupDetail = (Supplier.SupplierDetail)Session["SupplierandExpense"];
+            }
             model.SupDetail.SupplierName = RequestFormData(Request, "venusername");
-            model.SupDetail.SupplierEmail = RequestFormData(Request, "venaddress");
+            model.SupDetail.Email = RequestFormData(Request, "mailaddress"); 
             model.SupDetail.Description = RequestFormData(Request, "desc");
             model.SupDetail.ContactNo = RequestFormData(Request, "phone");
-            model.SupDetail.MailAddress = RequestFormData(Request, "mailaddress");
-
-            InsertSupplier(model);
-
+            model.SupDetail.MailAddress = RequestFormData(Request, "venaddress");
+            if (model.SupDetail.Mode == "0")
+            {
+                DeleteSupplierbyid(model);
+            }
+            if (model.SupDetail.Mode == "1")
+            {
+                UpdateSupplier(model);
+            }
+            else 
+            {
+                InsertSupplier(model);
+            }
             return RedirectToAction("SupplierList");
         }
 
+        //Edit supplierList
+        //[HttpPost]
+        public ActionResult EditSupplier(string id)
+        {
+            Supplier model = new Supplier();
+            try 
+            {
+                getSupplierById(model, id);
+                foreach (DataRow row in model.WorkDataset.TempDataSet.Tables[0].Rows)
+                {
+                    model.SupDetail.SupplierId = row["SUPPLIER_KEY_ID"].ToString();
+                    model.SupDetail.SupplierName = row["SUPPLIER_NAME"].ToString();
+                    model.SupDetail.Email = row["MAIL"].ToString();
+                    model.SupDetail.ContactNo = row["CONTACT_NUMBER"].ToString();
+                }
+                model.SupDetail.Mode = "1";
+                Session["SupplierandExpense"] = model.SupDetail;
+                return View("~/Views/SupplierandExpense/SupplierListAddForm.cshtml", model);
+            }
+            catch (Exception ex)
+            {
+                Exceptionmessage = ex.Message.ToString();
+                return View("~/Views/Shared/Error.cshtml");
+            }
+        }
+        
+        //Delete Supplier
+        public ActionResult DeleteSupplier(string id)
+        {
+            Supplier model = new Supplier();
+            try
+            {
+                getSupplierById(model, id);
+                foreach (DataRow row in model.WorkDataset.TempDataSet.Tables[0].Rows)
+                {
+                    model.SupDetail.SupplierId = row["SUPPLIER_KEY_ID"].ToString();
+                    model.SupDetail.SupplierName = row["SUPPLIER_NAME"].ToString();
+                    model.SupDetail.Email = row["MAIL"].ToString();
+                    model.SupDetail.ContactNo = row["CONTACT_NUMBER"].ToString();
+                    
+                }
+                model.SupDetail.Mode = "0";
+                Session["SupplierandExpense"] = model.SupDetail;
+                return View("~/Views/SupplierandExpense/SupplierListAddForm.cshtml", model);
+            }
+            catch(Exception ex)
+            {
+              return View("~/Views/Shared/Error.cshtml");
+            }
+              
+        }
+        //getdata
+        //categoryList 
         public ActionResult CategoryList()
         {
             Supplier model = new Supplier();
             CategoryList(model);
             return View("~/Views/SupplierandExpense/CategoryList.cshtml",model);
         }
-
+        //add
+        //category form 
         public ActionResult CategoryListAddForm()
         {
             Supplier model = new Supplier();
@@ -78,13 +147,14 @@ namespace Expense_tracker.Controllers
             return RedirectToAction("CategoryList");
             
         }
-
+        //item List form 
         public ActionResult ItemsList()
         {
             Supplier model = new Supplier();
             ItemList(model);
             return View(model);
         }
+        //item addd form 
         public ActionResult ItemListAddForm()
         {
             Supplier model = new Supplier();
@@ -92,6 +162,7 @@ namespace Expense_tracker.Controllers
             return View(model);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ItemListAddFormComplete()
         {
             Supplier model = new Supplier();
@@ -122,6 +193,8 @@ namespace Expense_tracker.Controllers
             }
 
         }
+        //insert
+        //supplier sql 
         private void InsertSupplier(Supplier model)
         {
             StringBuilder sb = new StringBuilder();
@@ -176,7 +249,7 @@ namespace Expense_tracker.Controllers
                 con.Close();
             }
         }
-
+        //insert category sql 
         private void InsertCategory(Supplier model)
         {
             StringBuilder sb = new StringBuilder();
@@ -230,7 +303,7 @@ namespace Expense_tracker.Controllers
                 con.Close();
             }
         }
-
+        //Select category data 
         private void CategoryList(Supplier model, string supplierId = null)
         {
             StringBuilder sb = new StringBuilder();
@@ -290,10 +363,10 @@ namespace Expense_tracker.Controllers
             }
             finally
             {
-                //WorkDataset.Tables.Clear();
                 con.Close();
             }
         }
+        //select supplier list data 
         private void SupplierList(Supplier model)
         {
             StringBuilder sb = new StringBuilder();
@@ -341,7 +414,7 @@ namespace Expense_tracker.Controllers
                con.Close();
             }
         }
-
+        // insert item sql 
         private void InsertItem(Supplier model)
         {
             StringBuilder sb = new StringBuilder();
@@ -392,7 +465,7 @@ namespace Expense_tracker.Controllers
             }
 
         }
-
+        
         private void InsertItemDetails(Supplier model)
         {
             StringBuilder sb = new StringBuilder();
@@ -420,7 +493,7 @@ namespace Expense_tracker.Controllers
             }
            
         }
-
+        //select item sql 
         private void ItemList(Supplier model)
         {
             StringBuilder sb = new StringBuilder();
@@ -492,6 +565,99 @@ namespace Expense_tracker.Controllers
 
             };
             return Json(returndata, JsonRequestBehavior.AllowGet);
+        }
+
+        //supplierbyid
+        private bool getSupplierById(Supplier model,string supplierId)
+        {
+            StringBuilder sb = new StringBuilder();
+            SqlConnection con = new SqlConnection(cs);
+            sb.Append(" ");
+            sb.Append("SELECT ");
+            sb.Append("    SUPPLIER_KEY_ID ");
+            sb.Append("    , COMPANY_ID ");
+            sb.Append("    , SHOP_ID ");
+            sb.Append("    , SUPPLIER_NAME ");
+            sb.Append("    , CONTACT_NUMBER ");
+            sb.Append("    , MAIL ");
+            sb.Append("    , REG_USER ");
+            sb.Append("    , REG_DTM ");
+            sb.Append("    , UPD_USER ");
+            sb.Append("    , UPD_DTM ");
+            sb.Append("FROM ");
+            sb.Append("    T_SUPPLIER ");
+            sb.Append("WHERE ");
+            sb.Append("    SUPPLIER_KEY_ID = @SUPPLIER_KEY_ID");
+            sb.Append("   AND COMPANY_ID = @COMPANY_ID");
+            sb.Append("   AND  SHOP_ID = @SHOP_ID ");
+            using (SqlCommand cmd = new SqlCommand(sb.ToString(), con))
+            {
+                cmd.Parameters.AddWithValue("@COMPANY_ID", Auth.CompanyId);
+                cmd.Parameters.AddWithValue("@SHOP_ID", Auth.ShopId);
+                cmd.Parameters.AddWithValue("@SUPPLIER_KEY_ID", supplierId);
+              
+                con.Open();
+                var dataReader = cmd.ExecuteReader();
+                var Supplierbyid = new DataTable("SupplierbyId");
+                Supplierbyid.Load(dataReader);
+
+                model.WorkDataset.TempDataSet.Tables.Add(Supplierbyid);
+            }
+
+
+            return true;
+        }
+
+        private bool UpdateSupplier(Supplier model)
+        {
+            StringBuilder sb = new StringBuilder();
+            SqlConnection con = new SqlConnection(cs);
+
+            sb.Append("UPDATE T_SUPPLIER ");
+            sb.Append("SET ");
+            sb.Append("     SUPPLIER_NAME = @SUPPLIER_NAME ");
+            sb.Append("    , CONTACT_NUMBER = @CONTACT_NUMBER ");
+            sb.Append("    , MAIL = @MAIL ");
+            sb.Append("    , UPD_USER = @UPD_USER ");
+            sb.Append("    , UPD_DTM = @UPD_DTM ");
+            sb.Append("    , ADDRESS = @ADDRESS ");
+            sb.Append("WHERE ");
+            sb.Append("    SUPPLIER_KEY_ID = @SUPPLIER_KEY_ID");
+            using (SqlCommand cmd = new SqlCommand(sb.ToString(), con))
+            {
+
+                cmd.Parameters.AddWithValue("@SUPPLIER_NAME", model.SupDetail.SupplierName);
+                cmd.Parameters.AddWithValue("@CONTACT_NUMBER", model.SupDetail.ContactNo);
+                cmd.Parameters.AddWithValue("@ADDRESS", model.SupDetail.MailAddress);
+                cmd.Parameters.AddWithValue("@MAIL", model.SupDetail.Email);
+                cmd.Parameters.AddWithValue("@SUPPLIER_KEY_ID", model.SupDetail.SupplierId);
+                cmd.Parameters.AddWithValue("@UPD_USER", Auth.Authoritytype);
+                cmd.Parameters.AddWithValue("@UPD_DTM", (DateTime.Now.TimeOfDay).ToString());
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            return true;
+        }
+
+        private bool DeleteSupplierbyid(Supplier model)
+        {
+            StringBuilder sb = new StringBuilder();
+            SqlConnection con = new SqlConnection(cs);
+
+            sb.Append("DELETE ");
+            sb.Append("FROM ");
+            sb.Append("    T_SUPPLIER ");
+            sb.Append("WHERE ");
+            sb.Append("    SUPPLIER_KEY_ID = @SUPPLIER_KEY_ID ");
+            using (SqlCommand cmd = new SqlCommand(sb.ToString(), con))
+            {
+                cmd.Parameters.AddWithValue("@SUPPLIER_KEY_ID", model.SupDetail.SupplierId);
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+            return true;
         }
     }
 }

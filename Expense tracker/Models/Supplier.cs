@@ -13,18 +13,22 @@ namespace Expense_tracker.Models
         public CategoryForm CatForm = new CategoryForm();
         public ItemForm ItemFormData = new ItemForm();
         public DataSets WorkDataset = new DataSets();
+        public static string Exceptionmessage { get; set; }
 
         public class SupplierDetail
         {
             public int UserId { get; set; }
+            public string SupplierId { get; set; }
             public string SupplierName { get; set; }
-            public string SupplierEmail { get; set; }
+            public string Email { get; set; }
             public string Authoritytype { get; set; }
             public string CompanyId { get; set; }
             public string ShopId { get; set; }
             public string ContactNo { get; set; }
             public string MailAddress { get; set; }
             public string Description { get; set; }
+
+            public string Mode { get; set; }
 
             public Dictionary<string, string> SuppliersLists = new Dictionary<string, string>();
 
