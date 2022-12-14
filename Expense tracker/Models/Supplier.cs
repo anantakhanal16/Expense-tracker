@@ -42,6 +42,9 @@ namespace Expense_tracker.Models
             public string AvilableFlg { get; set; }
 
             public string Description { get; set; }
+            public string Mode { get; set; }
+
+            public Dictionary<string, string> SuppliersLists = new Dictionary<string, string>();
 
         }
         public class ItemForm

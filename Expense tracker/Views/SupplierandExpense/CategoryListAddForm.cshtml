@@ -2,6 +2,7 @@
 @using System.Data;
 @{
     ViewBag.Title = "CategoryListAddForm";
+    string check = "selected";
 }
 <div class="container">
     <form method="post" action="/SupplierandExpense/CategoryAddComplete">
@@ -12,9 +13,9 @@
                     <div class="form-group mx-4">
                         <label for="suppliers">Supplier Name</label>
                         <select name="supplierid" class="form-select form-select-sm mb-3" aria-label=".form-select-lg example">
-                            @foreach (KeyValuePair<string, string> Suppliers in Model.SupDetail.SuppliersLists)
+                            @foreach (KeyValuePair<string, string> Suppliers in Model.CatForm.SuppliersLists)
                             {
-                                <option value="@Suppliers.Key">@Suppliers.Value</option>
+                                <option value="@Suppliers.Key" @if (Model.CatForm.SupplierId == Suppliers.Key) { @check; }  >@Suppliers.Value</option>
                             }
                         </select>
 
@@ -22,7 +23,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="UserName">Category Name</label>
-                    <input type="text" class="form-control" name="catgory_name" placeholder="Enter User Name">
+                    <input type="text" class="form-control" name="catgory_name" value="@Model.CatForm.CategoryName" placeholder="Enter User Name">
                 </div>
             </div>
             <div class="row">

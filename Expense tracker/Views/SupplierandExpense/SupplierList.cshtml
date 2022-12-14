@@ -19,30 +19,35 @@
         </div>
     </form>
     <div class="card bg-white my-3 py-3">
-        <table class="table table-striped">
-            <tr>
-                <th class="bold">Supplier Id</th>
-                <th>Address</th>
-                <th>Mail</th>
-                <th>Phone</th>
-                <th>Action</th>
-            </tr>
-        
-            @if (Model.WorkDataset.TempDataSet.Tables[0] != null)
-            {
-                foreach (DataRow row in Model.WorkDataset.TempDataSet.Tables[0].Rows)
+        <table class="table table-striped table-responsive">
+            <tbody class="table-responsive">
+                <tr>
+                    <th class="bold">Supplier Id</th>
+                    <th>Address</th>
+                    <th>Mail</th>
+                    <th>Phone</th>
+                    <th>Phone</th>
+                    <th>Action</th>
+                </tr>
+
+                @if (Model.WorkDataset.TempDataSet.Tables[0] != null)
                 {
-                    <tr>
-                        <td>@row["SUPPLIER_KEY_ID"].ToString()</td>
-                        <td>@row["SUPPLIER_NAME"].ToString()</td>
-                        <td>@row["CONTACT_NUMBER"].ToString()</td>
-                        <td>@row["MAIL"].ToString()</td>
-                        <td>@row["REG_USER"].ToString()</td>
-                        <td><a class="btn btn-outline-primary" href="/SupplierandExpense/EditSupplier/@row["SUPPLIER_KEY_ID"]">Edit</a></td>
-                        <td><a class="btn btn-outline-danger" href="/SupplierandExpense/DeleteSupplier/@row["SUPPLIER_KEY_ID"]">Delete</a></td>
-                    </tr>
+                    foreach (DataRow row in Model.WorkDataset.TempDataSet.Tables[0].Rows)
+                    {
+                        <tr>
+                            <td>@row["SUPPLIER_KEY_ID"].ToString()</td>
+                            <td>@row["SUPPLIER_NAME"].ToString()</td>
+                            <td>@row["CONTACT_NUMBER"].ToString()</td>
+                            <td>@row["MAIL"].ToString()</td>
+                            <td>@row["REG_USER"].ToString()</td>
+                            <td>
+                                <a class="btn btn-outline-primary" href="/SupplierandExpense/EditSupplier/@row["SUPPLIER_KEY_ID"]">Edit</a>
+                                <a class="btn btn-outline-danger" href="/SupplierandExpense/DeleteSupplier/@row["SUPPLIER_KEY_ID"]">Delete</a>
+                            </td>
+                        </tr>
+                    }
                 }
-            }
-        </table>
+            </tbody>
+         </table>
     </div>
 </div>

@@ -48,6 +48,10 @@ namespace Expense_tracker.Controllers
             model.SupDetail.Description = RequestFormData(Request, "desc");
             model.SupDetail.ContactNo = RequestFormData(Request, "phone");
             model.SupDetail.MailAddress = RequestFormData(Request, "venaddress");
+            if (!(model.SupDetail.Mode == "0") && !(model.SupDetail.Mode == "1"))
+            {
+                InsertSupplier(model);
+            }
             if (model.SupDetail.Mode == "0")
             {
                 DeleteSupplierbyid(model);
@@ -56,10 +60,7 @@ namespace Expense_tracker.Controllers
             {
                 UpdateSupplier(model);
             }
-            else 
-            {
-                InsertSupplier(model);
-            }
+            Session.Remove("SupplierandExpense");
             return RedirectToAction("SupplierList");
         }
 
@@ -88,7 +89,6 @@ namespace Expense_tracker.Controllers
                 return View("~/Views/Shared/Error.cshtml");
             }
         }
-        
         //Delete Supplier
         public ActionResult DeleteSupplier(string id)
         {
@@ -130,7 +130,7 @@ namespace Expense_tracker.Controllers
             SupplierList(model);
             foreach (DataRow suppiler in model.WorkDataset.TempDataSet.Tables[0].Rows)
             {
-                model.SupDetail.SuppliersLists.Add(suppiler["SUPPLIER_KEY_ID"].ToString(), suppiler["SUPPLIER_NAME"].ToString());
+                model.CatForm.SuppliersLists.Add(suppiler["SUPPLIER_KEY_ID"].ToString(), suppiler["SUPPLIER_NAME"].ToString());
             }
 
             return View("~/Views/SupplierandExpense/CategoryListAddForm.cshtml", model);
@@ -147,7 +147,42 @@ namespace Expense_tracker.Controllers
             return RedirectToAction("CategoryList");
             
         }
+      
+        public ActionResult EditCategory(string id)
+        {
+            try
+            {
+                Supplier model = new Supplier();
+                GetCatgoryById(model, id);
+                foreach(DataRow Row in model.WorkDataset.TempDataSet.Tables[0].Rows)
+                {
+                    model.CatForm.CategoryName = Row["CATEGORY_NAME"].ToString();
+                    model.CatForm.SupplierId =   Row["SUPPLIER_KEY_ID"].ToString();
+                    //model.CatForm.AvilableFlg =  Row["SUPPLIER_KEY_ID"].ToString();
+                }
+                SupplierList(model);
+                foreach (DataRow suppiler in model.WorkDataset.TempDataSet.Tables[1].Rows)
+                {
+                    model.CatForm.SuppliersLists.Add(suppiler["SUPPLIER_KEY_ID"].ToString(), suppiler["SUPPLIER_NAME"].ToString());
+                }
+                return View("~/Views/SupplierandExpense/CategoryListAddForm.cshtml", model);
+            }
+            catch(Exception ex)
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+            finally
+            {
+               
+            }
+        }
+       
+        public ActionResult DeleteCategory(string id)
+        {
+            return null;
+        }
         //item List form 
+      
         public ActionResult ItemsList()
         {
             Supplier model = new Supplier();
@@ -155,6 +190,7 @@ namespace Expense_tracker.Controllers
             return View(model);
         }
         //item addd form 
+      
         public ActionResult ItemListAddForm()
         {
             Supplier model = new Supplier();
@@ -568,6 +604,7 @@ namespace Expense_tracker.Controllers
         }
 
         //supplierbyid
+        //supplierCrud
         private bool getSupplierById(Supplier model,string supplierId)
         {
             StringBuilder sb = new StringBuilder();
@@ -608,6 +645,34 @@ namespace Expense_tracker.Controllers
             return true;
         }
 
+        //get
+        //category id
+        private bool GetCatgoryById(Supplier model, string CategoryId)
+        {
+            StringBuilder sb = new StringBuilder();
+            SqlConnection con = new SqlConnection(cs);
+            sb.Append("SELECT ");
+            sb.Append("     CATEGORY_NAME ");
+            sb.Append("    , REG_USER ");
+            sb.Append("    , SUPPLIER_KEY_ID ");
+            sb.Append("FROM ");
+            sb.Append("    T_SUPPLIER_CATEGORY ");
+            sb.Append("WHERE ");
+            sb.Append("    CAT_ID = @CAT_ID ");
+            sb.Append("ORDER BY ");
+            sb.Append("    CAT_ID ");
+            using (SqlCommand cmd = new SqlCommand(sb.ToString(), con))
+            {
+                cmd.Parameters.AddWithValue("@CAT_ID", CategoryId);
+                con.Open();
+                var dataReader = cmd.ExecuteReader();
+                DataTable CatbyCatid = new DataTable("CatbyCatid");
+                CatbyCatid.Load(dataReader);
+                model.WorkDataset.TempDataSet.Tables.Add(CatbyCatid);
+                con.Close();
+            }
+            return true;   
+        }
         private bool UpdateSupplier(Supplier model)
         {
             StringBuilder sb = new StringBuilder();

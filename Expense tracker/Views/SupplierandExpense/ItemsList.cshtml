@@ -20,14 +20,13 @@
         </div>
     </form>
     <div class="card bg-white my-3 py-3">
-        <table class="table table-striped">
+        <table class="table table-striped  table-responsive">
             <tr>
                 <th class="bold">Item ID</th>
                 <th>Supplier Name</th>
                 <th>Category Name</th>
                 <th>Item Name</th>
                 <th>Amount</th>
-
             </tr>
             @foreach (DataRow row in Model.WorkDataset.TempDataSet.Tables[0].Rows)
             {
